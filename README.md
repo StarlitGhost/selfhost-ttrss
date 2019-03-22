@@ -7,4 +7,4 @@ This docker config uses [this image](https://hub.docker.com/r/linuxserver/tt-rss
 This relies on my [base docker services](https://github.com/StarlitGhost/selfhost-base).  
 You'll want to symlink that project's .env file into this project's directory and set `POSTGRES_USER` and `POSTGRES_PW` in it.
 
-Once that's done you can just spin it up. The remainder of the setup is done online at `rss.${DOMAIN_BASE}`
+Once that's done you can just spin it up with `docker-compose up -d`. The remainder of the setup is done online at `rss.${DOMAIN_BASE}`
