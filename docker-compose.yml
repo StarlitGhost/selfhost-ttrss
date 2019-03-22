@@ -1,0 +1,53 @@
+version: '3.5'
+
+services:
+  ttrss:
+    image: linuxserver/tt-rss
+    container_name: ttrss
+    depends_on:
+      - postgres
+    networks:
+      - web
+      - internal
+    ports:
+      - 8455:80
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+    volumes:
+      - ${PERSISTENT_DIR}/config:/config
+    labels:
+      - "traefik.docker.network=web"
+      - "traefik.enable=true"
+      - "traefik.backend=ttrss"
+      - "traefik.frontend.rule=Host:rss.${DOMAIN_BASE}"
+      - "traefik.port=80"
+      - "com.centurylinklabs.watchtower.enable=true"
+    restart: unless-stopped
+
+  postgres:
+    image: postgres:latest
+    container_name: postgres
+    networks:
+      - internal
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PW}
+      - POSTGRES_DB=ttrss
+    volumes:
+      - pg-data:/var/lib/postgresql/data
+    restart: unless-stopped
+
+volumes:
+  pg-data:
+
+networks:
+  web:
+    external: true
+  internal:
+
+# vim: tabstop=2 shiftwidth=2 expandtab
