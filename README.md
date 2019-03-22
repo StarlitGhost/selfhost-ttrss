@@ -1,6 +1,6 @@
 [Tiny Tiny RSS](https://git.tt-rss.org/git/tt-rss) is a self-hosted web-based RSS feed reader.
 
-This docker config uses [this image](https://hub.docker.com/r/linuxserver/tt-rss/) from [LinuxServer.io]
+This docker config uses [this image](https://hub.docker.com/r/linuxserver/tt-rss/) from [LinuxServer.io](https://LinuxServer.io)
 
 # Setup
 
