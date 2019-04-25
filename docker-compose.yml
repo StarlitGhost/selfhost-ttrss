@@ -2,7 +2,7 @@ version: '3.5'
 
 services:
   ttrss:
-    image: linuxserver/tt-rss
+    image: linuxserver/tt-rss:latest
     container_name: ttrss
     depends_on:
       - postgres
