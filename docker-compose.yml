@@ -4,17 +4,16 @@ services:
   ttrss:
     image: linuxserver/tt-rss:latest
     container_name: ttrss
-    depends_on:
+    external_links:
       - postgres
     networks:
       - web
-      - internal
-    ports:
-      - 8455:80
+      - postgres_network
     environment:
       - PUID=${PUID}
       - PGID=${PGID}
       - TZ=${TZ}
+      - POSTGRES_DB=ttrss
     volumes:
       - ${PERSISTENT_DIR}/config:/config
     labels:
@@ -22,32 +21,17 @@ services:
       - "traefik.enable=true"
       - "traefik.backend=ttrss"
       - "traefik.frontend.rule=Host:rss.${DOMAIN_BASE}"
+      - "traefik.frontend.auth.forward.address=https://login.${DOMAIN_BASE}/api/verify?rd=https://login.${DOMAIN_BASE}/%23/"
+      - "traefik.frontend.headers.customRequestHeaders=X-ORIGINAL-URL:https://rss.${DOMAIN_BASE}"
+      - "traefik.frontend.auth.forward.tls.insecureSkipVerify=true"
       - "traefik.port=80"
       - "com.centurylinklabs.watchtower.enable=true"
     restart: unless-stopped
 
-  postgres:
-    image: postgres:latest
-    container_name: postgres
-    networks:
-      - internal
-    environment:
-      - PUID=${PUID}
-      - PGID=${PGID}
-      - TZ=${TZ}
-      - POSTGRES_USER=${POSTGRES_USER}
-      - POSTGRES_PASSWORD=${POSTGRES_PW}
-      - POSTGRES_DB=ttrss
-    volumes:
-      - pg-data:/var/lib/postgresql/data
-    restart: unless-stopped
-
-volumes:
-  pg-data:
-
 networks:
   web:
     external: true
-  internal:
+  postgres_network:
+    external: true
 
 # vim: tabstop=2 shiftwidth=2 expandtab
